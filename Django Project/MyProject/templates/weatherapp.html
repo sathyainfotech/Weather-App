@@ -1,0 +1,59 @@
+{% extends 'index.html' %}
+{% block content %}
+<style>
+    .shadow{
+        box-shadow: 2px 2px 3px 1px lightslategrey;
+        padding: 20px;
+    }   
+</style>
+
+    <div class="container-fluid" style="margin-top:60px;margin-bottom:100px">		
+        <div class="col-md-offset-4 col-md-3"> 
+            <h3 class="page-header text-primary text-center"><span class="fas fa-cloud-sun"></span> Django - Weather Application</h3>
+            
+            {% if messages %}
+            {% for message in messages %}
+                {% if message.tags == 'error'%}
+                    <div class="alert alert-danger">
+                        {{ message }}
+                    </div>
+                {% else %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>	
+                {% endif %}				
+            {% endfor %}
+            {% endif %} 
+
+
+            <form method="POST">
+                {% csrf_token %}
+                <div class="input-group">
+                    {{form.name}}
+                    <span class="input-group-btn">
+                        <button class="btn btn-primary" type="submit"><span class="fa fa-add"></span> Add City</button>
+                    </span>
+                </div>
+            </form>
+
+            {% for city_weather in data %}
+                <div class="shadow media">
+                    <div class="media-left">
+						<a href="#">
+							<img src="http://openweathermap.org/img/w/{{city_weather.icon}}.png" class="media-object" alt="Image">
+						</a>
+					</div>
+                    <div class="media-body">
+						<h3 class="media-heading"><b>{{city_weather.city}}</b></h3>                   
+						<h4>{{city_weather.temperature}}&deg;C</h4>                   
+						<h4>{{city_weather.description}}</h4>                   
+						<h4>{{city_weather.country}}</h4> 
+					</div>
+                    <div class="media-right">
+						<h3><a href="{% url 'DCity' city_weather.city %}" style="text-decoration: none;" class="text-danger">&#x2718;</a></h3>
+					</div>
+                </div>
+            {% endfor %}	
+        </div>
+    </div>
+{% endblock %}
